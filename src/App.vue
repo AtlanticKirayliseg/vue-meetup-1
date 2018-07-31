@@ -1,28 +1,49 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h1>To Do List</h1>
+    <input type="text" v-model="userInput" @keydown.enter="addToList()">
+    <button @click="addToList()">Add</button>
+    <hr>
+    <ul>
+      <li v-for="(item, index) in toDoList" :key="index">
+        <input type="checkbox" @click="toggleCompleted(index)">
+        <span :class="item.completed ? 'done' : ''">{{ item.name }}</span>
+        <button @click="removeItem(index)">X</button>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'app',
-  components: {
-    HelloWorld
+  data () {
+    return {
+      userInput: '',
+      toDoList: []
+    }
+  },
+  methods: {
+    addToList () {
+      if (this.userInput === '') return
+      this.toDoList.push({
+        name: this.userInput,
+        completed: false
+      })
+      this.userInput = ''
+    },
+    toggleCompleted (index) {
+      this.toDoList[index].completed = !this.toDoList[index].completed
+    },
+    removeItem (index) {
+      this.toDoList.splice(index, 1)
+    }
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  .done {
+    text-decoration: line-through;
+  }
 </style>
